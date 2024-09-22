@@ -1,0 +1,10 @@
+Servos: Each servo motor typically has three wires:
+
+    Red (VCC): Connect to 5V pin on the Arduino.
+    Brown (GND): Connect to GND pin on the Arduino.
+    Orange (Signal): Connect to the respective digital pins on the Arduino:
+        Head servo: Pin 2
+        Left hand servo: Pin 3
+        Right hand servo: Pin 4
+
+

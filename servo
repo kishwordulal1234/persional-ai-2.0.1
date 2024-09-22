@@ -1,0 +1,104 @@
+#include <Servo.h>
+
+Servo head;
+Servo l_hand;
+Servo r_hand;
+
+byte val = "";
+
+void setup() {
+  head.attach(2);   // Head servo on pin 2
+  l_hand.attach(3); // Left hand servo on pin 3
+  r_hand.attach(4); // Right hand servo on pin 4
+  Serial.begin(9600); // Serial communication for controlling from Python
+}
+
+void standby(){
+  head.write(0);
+  int r_pos = 30;
+  int l_pos = map(r_pos, 0, 180, 180, 0);
+  l_hand.write(l_pos);
+  r_hand.write(r_pos);
+}
+
+void hi(){
+  head.write(90);
+  for (int i = 30; i <= 170; i++){
+    r_hand.write(i);
+    delay(5);
+  }
+  for (int i = 170; i >= 30; i--){
+    r_hand.write(i);
+    delay(5);
+  }
+  standby();
+}
+
+void hands_up(){
+  for (int i = 30; i <= 170; i++){
+    int r_pos = i;
+    int l_pos = map(r_pos, 0, 180, 180, 0);
+    l_hand.write(l_pos);
+    r_hand.write(r_pos);
+    delay(5);
+  }
+  delay(600);
+  for (int i = 170; i >= 30; i--){
+    int r_pos = i;
+    int l_pos = map(r_pos, 0, 180, 180, 0);
+    l_hand.write(l_pos);
+    r_hand.write(r_pos);
+    delay(5);
+  }
+}
+
+void look_left(){
+  head.write(90);
+}
+
+void look_right(){
+  head.write(0);
+}
+
+void double_punch(){
+  for (int i = 30; i >= 0; i--){
+    int r_pos = i;
+    int l_pos = map(r_pos, 0, 180, 180, 0);
+    l_hand.write(l_pos);
+    r_hand.write(r_pos);
+    delay(5);
+  }
+  standby();
+}
+
+void smash(){
+  for (int i = 30; i <= 170; i++){
+    int r_pos = i;
+    int l_pos = map(r_pos, 0, 180, 180, 0);
+    l_hand.write(l_pos);
+    r_hand.write(r_pos);
+    delay(5);
+  }
+  standby();
+}
+
+void loop() {
+  standby();
+  while(Serial.available() > 0) {
+    val = Serial.read();
+    if (val == 'h'){
+      hi();
+    } else if (val == 'p'){
+      double_punch();
+    } else if (val == 'u'){
+      hands_up();
+    } else if (val == 'l'){
+      look_left();
+    } else if (val == 'r'){
+      look_right();
+    } else if (val == 's'){
+      smash();
+    }
+  }
+}
+
